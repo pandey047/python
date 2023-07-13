@@ -1,0 +1,49 @@
+''''''
+
+1:Max:4, 4:Ann:0, 2:Jim:4, 3:Tom:1
+Explanation:
+1:Max:4 represents
+
+1 -> employee id
+Max -> employee name
+4 -> manager id
+output:
+
+ Ann
+    -Max
+        --Tom
+    -Jim
+'''
+#  '''
+def print_employee_hierarchy(employees):
+    # Create a dictionary to store the employee details
+    employee_dict = {}
+    for emp in employees:
+        emp_id, emp_name, manager_id = emp.split(":")
+        employee_dict[emp_id] = {
+            "name": emp_name,
+            "manager_id": manager_id,
+            "subordinates": []
+        }
+    print(employee_dict)
+    # Build the hierarchy by linking employees to their respective managers
+    root = None
+    for emp_id, emp_details in employee_dict.items():
+        manager_id = emp_details["manager_id"]
+        if manager_id == "0":
+            root = emp_id
+        else:
+            employee_dict[manager_id]["subordinates"].append(emp_id)
+
+    # Print the hierarchy starting from the root employee
+    print_employee_tree(root, employee_dict, "")
+    print()
+
+def print_employee_tree(emp_id, employee_dict, indent):
+    emp_name = employee_dict[emp_id]["name"]
+    print(indent + "-" + emp_name)
+    for subordinate_id in employee_dict[emp_id]["subordinates"]:
+        print_employee_tree(subordinate_id, employee_dict, indent + "    ")
+# Example usage
+employee_data = ["1:Max:4", "4:Ann:0", "2:Jim:4", "3:Tom:1"]
+print_employee_hierarchy(employee_data)
